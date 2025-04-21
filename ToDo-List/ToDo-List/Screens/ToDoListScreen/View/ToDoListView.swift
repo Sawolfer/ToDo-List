@@ -15,10 +15,7 @@ struct ToDoListView: View {
     }
 
     // MARK: - Properties
-    @State var tasks: [TaskViewModel] = [
-       TaskViewModel(task: Task(title: "Buy milk", description: "From the supermarket")),
-       TaskViewModel(task: Task(title: "Do homework", description: "Math exercises", isDone: true))
-   ]
+    @State var tasks: [TaskViewModel]
     @State var searchText: String = ""
 
     var body: some View {
@@ -33,7 +30,6 @@ struct ToDoListView: View {
             }
             .searchable(text: $searchText)
             .navigationTitle("Задачи")
-//            .statusBarHidden(false)
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     Spacer()
@@ -63,5 +59,8 @@ struct ToDoListView: View {
 }
 
 #Preview {
-    ToDoListView()
+    ToDoListView(tasks: [
+        TaskViewModel(task: Task(title: "Buy milk", description: "From the supermarket")),
+        TaskViewModel(task: Task(title: "Do homework", description: "Math exercises", isDone: true))],
+                 searchText: "")
 }

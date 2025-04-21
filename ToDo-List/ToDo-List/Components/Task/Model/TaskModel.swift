@@ -12,7 +12,7 @@ struct Task {
     var title: String = ""
     var description: String = ""
     var isDone: Bool = false
-    var createdAt: Date = Date()
+    let createdAt: Date = Date()
 }
 
 extension Task : Identifiable {}
