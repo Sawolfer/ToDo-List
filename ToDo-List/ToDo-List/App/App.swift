@@ -12,7 +12,8 @@ import SwiftUI
 struct ToDoListApp: App {
     var body: some Scene {
         WindowGroup {
-            ToDoListView()
+//            ToDoListView()
+            TaskRedactorView(taskVM: TaskRedactorViewModel(task: Task(title: "Preview Task", description: "some text")))
         }
     }
 }
