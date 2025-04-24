@@ -1,5 +1,5 @@
 //
-//  ToDoListView.swift
+//  TaskListView.swift
 //  ToDo-List
 //
 //  Created by Савва Пономарев on 19.04.2025.
@@ -8,27 +8,33 @@
 import SwiftUI
 
 
-struct ToDoListView: View {
+struct TaskListView: View {
     // MARK: - Constants
     private enum Constants {
         static let addNewToDoButtonImage: String = "square.and.pencil"
     }
 
     // MARK: - Properties
-    @State var tasks: [TaskViewModel]
+//    @StateObject private var viewModel = TaskListViewModel()
+    @ObservedObject var viewModel: TaskListViewModel
     @State var searchText: String = ""
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack {
-                    ForEach(tasks, id: \.id) { vm in
-                        TaskView(viewModel: vm)
+                    ForEach(viewModel.filteredTasks) { vm in
+                        NavigationLink {
+                            TaskRedactorView(taskVM: TaskRedactorViewModel(task: vm.task))
+                        } label: {
+                            TaskView(viewModel: vm)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding()
             }
-            .searchable(text: $searchText)
+            .searchable(text: $viewModel.searchText)
             .navigationTitle("Задачи")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
@@ -36,7 +42,7 @@ struct ToDoListView: View {
                 }
 
                 ToolbarItem(placement: .bottomBar) {
-                    Text("\(tasks.count) Задач")
+                    Text("\(viewModel.tasks.count ) Задач")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -59,8 +65,7 @@ struct ToDoListView: View {
 }
 
 #Preview {
-    ToDoListView(tasks: [
-        TaskViewModel(task: Task(title: "Buy milk", description: "From the supermarket")),
-        TaskViewModel(task: Task(title: "Do homework", description: "Math exercises", isDone: true))],
-                 searchText: "")
+    let vm = TaskListViewModel.sampleData()
+
+    TaskListView(viewModel: vm, searchText: "")
 }

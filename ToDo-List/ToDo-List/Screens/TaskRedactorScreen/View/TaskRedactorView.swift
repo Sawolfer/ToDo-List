@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskRedactorView: View {
 
-//MARK: - Constants
+    // MARK: - Constants
     private enum Constants {
         static var backwardButtonImage: String = "chevron.backward"
         static var bacwardButtonLable: String = "Назад"
@@ -17,8 +17,9 @@ struct TaskRedactorView: View {
         static var bacwardButtonImageSize: CGFloat = 20
     }
 
-// MARK: - Properties
+    // MARK: - Properties
     @State var taskVM: TaskRedactorViewModel
+    @Environment(\.dismiss) private var dismiss
 
 
     var body: some View {
@@ -29,22 +30,23 @@ struct TaskRedactorView: View {
                     .bold()
                     .padding(.horizontal)
                     .padding(.top)
-
+                
                 Text(taskVM.task.createdAt.slashedDate)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
-
+                
                 TextEditor(text: $taskVM.task.description)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .top)
             }
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        print("back")
+                        dismiss()
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: Constants.backwardButtonImage)
