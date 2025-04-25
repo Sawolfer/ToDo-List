@@ -17,9 +17,7 @@ struct TaskListView: View {
     // MARK: - Properties
 //    @StateObject private var viewModel = TaskListViewModel()
     @ObservedObject var viewModel: TaskListViewModel
-
     @Environment(\.colorScheme) var colorScheme
-
 
     var body: some View {
         let theme = AppTheme.theme(for: colorScheme)
@@ -60,8 +58,9 @@ struct TaskListView: View {
                 }
 
                 ToolbarItem(placement: .bottomBar) {
-                    Button {
-                        print("добавить")
+                    NavigationLink {
+                        let newTask = Task(title: "Новая задача")
+                        TaskRedactorView(taskVM: TaskRedactorViewModel(task: newTask, isNewTask: true))
                     } label: {
                         Image(systemName: Constants.addNewToDoButtonImage)
                             .font(.system(size: 20, weight: .bold))

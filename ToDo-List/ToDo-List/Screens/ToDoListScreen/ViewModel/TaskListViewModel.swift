@@ -25,6 +25,13 @@ class TaskListViewModel: ObservableObject {
         }
     }
 
+    func createNewTask() -> TaskViewModel {
+        let newTask = Task(title: "", description: "")
+        let newViewModel = TaskViewModel(task: newTask)
+        tasks.append(newViewModel)
+        return newViewModel
+    }
+
     func addTask(title: String, description: String = "") {
         let newTask = Task(title: title, description: description)
         tasks.append(TaskViewModel(task: newTask))

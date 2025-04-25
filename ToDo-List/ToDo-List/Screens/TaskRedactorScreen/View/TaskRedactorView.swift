@@ -17,33 +17,42 @@ struct TaskRedactorView: View {
     }
 
     // MARK: - Properties
-    @State var taskVM: TaskRedactorViewModel
+    @ObservedObject var taskVM: TaskRedactorViewModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
 
+    init(taskVM: TaskRedactorViewModel) {
+        self._taskVM = ObservedObject(wrappedValue: taskVM)
+    }
+
     var body: some View {
-        var theme = AppTheme.theme(for: colorScheme)
+        let theme = AppTheme.theme(for: colorScheme)
+
         NavigationStack {
             VStack(alignment: .leading, spacing: 8) {
-                TextField("Title", text: $taskVM.task.title)
+                TextField("Название задачи", text: $taskVM.task.title)
                     .font(.system(.largeTitle, design: .default))
                     .bold()
                     .padding(.horizontal)
                     .padding(.top)
-                
-                Text(taskVM.task.createdAt.slashedDate)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal)
-                
+
+                if !taskVM.isNewTask {
+                    Text(taskVM.task.createdAt.slashedDate)
+                        .font(theme.fonts.subheadline)
+                        .foregroundStyle(theme.colors.dateText)
+                        .padding(.horizontal)
+                }
+
                 TextEditor(text: $taskVM.task.description)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .top)
+                    .background(theme.colors.background)
             }
-            .navigationTitle("")
+            .background(theme.colors.background)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar {
+                // Back button
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
                         dismiss()
@@ -55,6 +64,7 @@ struct TaskRedactorView: View {
                         }
                     }
                     .foregroundStyle(theme.colors.accent)
+                    .disabled(taskVM.task.title.isEmpty)
                 }
             }
         }
