@@ -17,9 +17,12 @@ struct TaskListView: View {
     // MARK: - Properties
 //    @StateObject private var viewModel = TaskListViewModel()
     @ObservedObject var viewModel: TaskListViewModel
-    @State var searchText: String = ""
+
+    @Environment(\.colorScheme) var colorScheme
+
 
     var body: some View {
+        let theme = AppTheme.theme(for: colorScheme)
         NavigationStack {
             ScrollView {
                 LazyVStack {
@@ -30,12 +33,17 @@ struct TaskListView: View {
                             TaskView(viewModel: vm)
                         }
                         .buttonStyle(.plain)
+
+                        Divider()
+                            .background(theme.colors.secondary)
+                            .padding(.horizontal)
                     }
                 }
-                .padding()
             }
             .searchable(text: $viewModel.searchText)
             .navigationTitle("Задачи")
+            .toolbarBackground(theme.colors.secondary.opacity(0.3), for: .bottomBar)
+            .toolbarBackground(.visible, for: .bottomBar)
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     Spacer()
@@ -43,8 +51,8 @@ struct TaskListView: View {
 
                 ToolbarItem(placement: .bottomBar) {
                     Text("\(viewModel.tasks.count ) Задач")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .font(theme.fonts.subheadline)
+                        .foregroundColor(theme.colors.text)
                 }
 
                 ToolbarItem(placement: .bottomBar) {
@@ -57,6 +65,7 @@ struct TaskListView: View {
                     } label: {
                         Image(systemName: Constants.addNewToDoButtonImage)
                             .font(.system(size: 20, weight: .bold))
+                            .foregroundStyle(theme.colors.accent)
                     }
                 }
             }
@@ -67,5 +76,5 @@ struct TaskListView: View {
 #Preview {
     let vm = TaskListViewModel.sampleData()
 
-    TaskListView(viewModel: vm, searchText: "")
+    TaskListView(viewModel: vm)
 }

@@ -13,16 +13,16 @@ struct TaskRedactorView: View {
     private enum Constants {
         static var backwardButtonImage: String = "chevron.backward"
         static var bacwardButtonLable: String = "Назад"
-        static var bacwardButtonColor: Color = .yellow
         static var bacwardButtonImageSize: CGFloat = 20
     }
 
     // MARK: - Properties
     @State var taskVM: TaskRedactorViewModel
     @Environment(\.dismiss) private var dismiss
-
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
+        var theme = AppTheme.theme(for: colorScheme)
         NavigationStack {
             VStack(alignment: .leading, spacing: 8) {
                 TextField("Title", text: $taskVM.task.title)
@@ -54,7 +54,7 @@ struct TaskRedactorView: View {
                             Text(Constants.bacwardButtonLable)
                         }
                     }
-                    .foregroundStyle(Constants.bacwardButtonColor)
+                    .foregroundStyle(theme.colors.accent)
                 }
             }
         }

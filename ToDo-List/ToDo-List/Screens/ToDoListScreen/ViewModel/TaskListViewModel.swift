@@ -37,7 +37,7 @@ class TaskListViewModel: ObservableObject {
     static func sampleData() -> TaskListViewModel {
         let vm = TaskListViewModel()
         vm.tasks = [
-            TaskViewModel(task: Task(title: "Buy groceries", description: "Milk, eggs, bread")),
+            TaskViewModel(task: Task(title: "Buy groceries", description: "Milk, eggs, bread", isDone: true)),
             TaskViewModel(task: Task(title: "Finish project", description: "Due by Friday")),
             TaskViewModel(task: Task(title: "Call mom", description: "Ask about vacation plans"))
         ]
