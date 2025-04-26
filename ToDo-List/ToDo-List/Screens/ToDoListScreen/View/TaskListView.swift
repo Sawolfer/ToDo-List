@@ -15,7 +15,6 @@ struct TaskListView: View {
     }
 
     // MARK: - Properties
-//    @StateObject private var viewModel = TaskListViewModel()
     @ObservedObject var viewModel: TaskListViewModel
     @Environment(\.colorScheme) var colorScheme
 
@@ -59,8 +58,7 @@ struct TaskListView: View {
 
                 ToolbarItem(placement: .bottomBar) {
                     NavigationLink {
-                        let newTask = Task(title: "Новая задача")
-                        TaskRedactorView(taskVM: TaskRedactorViewModel(task: newTask, isNewTask: true))
+                        makeNewTaskRedactorView()
                     } label: {
                         Image(systemName: Constants.addNewToDoButtonImage)
                             .font(.system(size: 20, weight: .bold))
@@ -69,6 +67,14 @@ struct TaskListView: View {
                 }
             }
         }
+    }
+    private func makeNewTaskRedactorView() -> some View {
+        let newTask = Task(title: "Новая задача")
+        return TaskRedactorView(taskVM: TaskRedactorViewModel(task: newTask, isNewTask: true),
+            onSave: {
+                viewModel.loadTasks()
+            }
+        )
     }
 }
 

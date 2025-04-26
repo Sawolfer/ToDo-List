@@ -20,11 +20,8 @@ struct TaskRedactorView: View {
     @ObservedObject var taskVM: TaskRedactorViewModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
-
-    init(taskVM: TaskRedactorViewModel) {
-        self._taskVM = ObservedObject(wrappedValue: taskVM)
-    }
-
+    var onSave: (() -> Void)? = nil
+    
     var body: some View {
         let theme = AppTheme.theme(for: colorScheme)
 
@@ -55,7 +52,8 @@ struct TaskRedactorView: View {
                 // Back button
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        dismiss()
+                        handleSaveAndDismiss()
+                        onSave?()
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: Constants.backwardButtonImage)
@@ -69,7 +67,16 @@ struct TaskRedactorView: View {
             }
         }
     }
+    private func handleSaveAndDismiss() {
+        if taskVM.isNewTask {
+            taskVM.saveNewTask()
+        } else if taskVM.hasChanges {
+            taskVM.saveChanges()
+        }
+        dismiss()
+    }
 }
+
 
 #Preview {
     TaskRedactorView(taskVM: TaskRedactorViewModel(task: Task(title: "Preview Task", description: "some text")))

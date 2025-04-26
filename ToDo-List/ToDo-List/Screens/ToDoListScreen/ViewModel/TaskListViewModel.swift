@@ -6,13 +6,30 @@
 //
 
 import Foundation
+import CoreData
 
 class TaskListViewModel: ObservableObject {
     @Published var tasks: [TaskViewModel] = []
     @Published var searchText: String = ""
+    private let persistenceController: PersistenceController
 
-    init(tasks: [Task] = []) {
-        self.tasks = tasks.map { TaskViewModel(task: $0) }
+    init(persistenceController: PersistenceController = .shared) {
+        self.persistenceController = persistenceController
+        loadTasks()
+    }
+
+    func loadTasks() {
+        let context = persistenceController.container.viewContext
+        let fetchRequest: NSFetchRequest<CDTask> = CDTask.fetchRequest()
+
+        do {
+            let cdTasks = try context.fetch(fetchRequest)
+            self.tasks = cdTasks
+                .map { TaskViewModel(task: Task(cdTask: $0)) }
+                .sorted { $0.task.createdAt > $1.task.createdAt }
+        } catch {
+            print("Failed to fetch tasks: \(error)")
+        }
     }
 
     var filteredTasks: [TaskViewModel] {

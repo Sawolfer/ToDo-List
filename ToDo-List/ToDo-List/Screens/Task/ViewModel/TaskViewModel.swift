@@ -16,6 +16,8 @@ class TaskViewModel: ObservableObject {
 
     func onDone() {
         task.isDone.toggle()
+
+        TaskPersistenceController.shared.updateTask(task)
     }
 }
 
