@@ -21,6 +21,7 @@ struct TaskListView: View {
 
     @State private var navigationPath = NavigationPath()
     @State private var showShareSheet = false
+    @State private var showEditorTask = false
 
     // MARK: - Computed Properties
     private var theme: AppTheme {
@@ -54,6 +55,18 @@ struct TaskListView: View {
                     }
                     .sheet(isPresented: $showShareSheet) {
                         ShareSheet(items: ["\(selectedTask?.task.title ?? "")\n \(selectedTask?.task.description ?? "")"])
+                    }
+                    .fullScreenCover(isPresented: $showEditorTask) {
+                        if let task = selectedTask {
+                            TaskRedactorView(
+                                taskVM: TaskRedactorViewModel(task: task.task)
+                            )
+                            .onDisappear() {
+                                showEditorTask = false
+                                viewModel.loadLocalTasks()
+                                closeDialog()
+                            }
+                        }
                     }
             }
             .blur(radius: selectedTask == nil ? 0 : 4)
@@ -120,8 +133,8 @@ struct TaskListView: View {
     }
 
     func editTask(_ task: TaskViewModel) {
-        closeDialog()
-        navigationPath.append(task.task)
+        showEditorTask = true
+        selectedTask = task
     }
 
     func shareTask(_ task: TaskViewModel) {
