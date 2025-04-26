@@ -10,10 +10,11 @@ import SwiftUI
 
 @main
 struct ToDoListApp: App {
+    @StateObject private var taskListVM = TaskListViewModel()
+
     var body: some Scene {
         WindowGroup {
-//            ToDoListView()
-            TaskRedactorView(taskVM: TaskRedactorViewModel(task: Task(title: "Preview Task", description: "some text")))
+            TaskListView(viewModel: taskListVM)
         }
     }
 }

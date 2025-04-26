@@ -9,6 +9,7 @@ import Foundation
 
 class TaskViewModel: ObservableObject {
     @Published var task: Task
+    var onDeleteHandler: (() -> Void)?
 
     init(task: Task) {
         self.task = task
@@ -16,6 +17,13 @@ class TaskViewModel: ObservableObject {
 
     func onDone() {
         task.isDone.toggle()
+
+        TaskPersistenceController.shared.updateTask(task)
+    }
+
+    func onDelete() {
+        TaskPersistenceController.shared.deleteTask(withId: task.id)
+        onDeleteHandler?()
     }
 }
 

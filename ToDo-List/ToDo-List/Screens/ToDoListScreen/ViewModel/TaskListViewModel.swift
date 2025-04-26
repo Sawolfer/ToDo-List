@@ -6,13 +6,47 @@
 //
 
 import Foundation
+import CoreData
 
 class TaskListViewModel: ObservableObject {
     @Published var tasks: [TaskViewModel] = []
     @Published var searchText: String = ""
+    private let persistenceController: PersistenceController
+    private let networkManager: AppNetworkManager
 
-    init(tasks: [Task] = []) {
-        self.tasks = tasks.map { TaskViewModel(task: $0) }
+    init(persistenceController: PersistenceController = .shared) {
+        self.persistenceController = persistenceController
+        self.networkManager = AppNetworkManager(persistenceController: persistenceController)
+        loadInitialData()
+    }
+
+    private func loadInitialData() {
+        loadLocalTasks()
+
+        networkManager.loadInitialTasksIfNeeded { [weak self] success in
+            if success {
+                DispatchQueue.main.async {
+                    self?.loadLocalTasks() // Reload with new API tasks
+                }
+            }
+        }
+    }
+
+    @Published var errorMessage: String?
+    
+    func loadLocalTasks() {
+        let context = persistenceController.container.viewContext
+        let fetchRequest: NSFetchRequest<CDTask> = CDTask.fetchRequest()
+
+        do {
+            let cdTasks = try context.fetch(fetchRequest)
+            self.tasks = cdTasks
+                .map { TaskViewModel(task: Task(cdTask: $0)) }
+                .sorted { $0.task.createdAt > $1.task.createdAt }
+        } catch {
+            errorMessage = "Failed to fetch tasks: \(error.localizedDescription)"
+            print("Failed to fetch tasks: \(error)")
+        }
     }
 
     var filteredTasks: [TaskViewModel] {
@@ -39,6 +73,10 @@ class TaskListViewModel: ObservableObject {
 
     func deleteTasks(at offsets: IndexSet) {
         tasks.remove(atOffsets: offsets)
+    }
+
+    func deleteTask(_ task: TaskViewModel) {
+        tasks.removeAll() { $0 === task}
     }
 
     static func sampleData() -> TaskListViewModel {

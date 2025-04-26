@@ -21,10 +21,6 @@ struct TaskRedactorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
 
-    init(taskVM: TaskRedactorViewModel) {
-        self._taskVM = ObservedObject(wrappedValue: taskVM)
-    }
-
     var body: some View {
         let theme = AppTheme.theme(for: colorScheme)
 
@@ -55,7 +51,7 @@ struct TaskRedactorView: View {
                 // Back button
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        dismiss()
+                        handleSaveAndDismiss()
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: Constants.backwardButtonImage)
@@ -64,13 +60,30 @@ struct TaskRedactorView: View {
                         }
                     }
                     .foregroundStyle(theme.colors.accent)
-                    .disabled(taskVM.task.title.isEmpty)
                 }
             }
         }
+    }
+
+    private func handleSaveAndDismiss() {
+        if !taskVM.task.title.isEmpty {
+            taskVM.saveTask()
+        }
+        dismiss()
+    }
+}
+
+extension TaskRedactorView : Hashable {
+    static func == (lhs: TaskRedactorView, rhs: TaskRedactorView) -> Bool {
+        lhs.taskVM == rhs.taskVM
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(taskVM)
     }
 }
 
 #Preview {
     TaskRedactorView(taskVM: TaskRedactorViewModel(task: Task(title: "Preview Task", description: "some text")))
 }
+
