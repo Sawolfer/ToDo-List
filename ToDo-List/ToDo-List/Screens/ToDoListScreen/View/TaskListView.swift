@@ -17,6 +17,7 @@ struct TaskListView: View {
     // MARK: - Properties
     @ObservedObject var viewModel: TaskListViewModel
     @Environment(\.colorScheme) var colorScheme
+    @State var refreshID: UUID = UUID()
 
     var body: some View {
         let theme = AppTheme.theme(for: colorScheme)
@@ -25,7 +26,15 @@ struct TaskListView: View {
                 LazyVStack {
                     ForEach(viewModel.filteredTasks) { vm in
                         NavigationLink {
-                            TaskRedactorView(taskVM: TaskRedactorViewModel(task: vm.task))
+                            TaskRedactorView(
+                                taskVM: TaskRedactorViewModel(
+                                    task: vm.task,
+                                    onSave: { [weak viewModel] in
+                                        viewModel?.loadTasks()
+                                        refreshID = UUID()
+                                    }
+                                )
+                            )
                         } label: {
                             TaskView(viewModel: vm)
                         }
@@ -36,6 +45,7 @@ struct TaskListView: View {
                             .padding(.horizontal)
                     }
                 }
+                .id(refreshID)
             }
             .searchable(text: $viewModel.searchText)
             .navigationTitle("Задачи")
@@ -47,7 +57,7 @@ struct TaskListView: View {
                 }
 
                 ToolbarItem(placement: .bottomBar) {
-                    Text("\(viewModel.tasks.count ) Задач")
+                    Text("\(viewModel.tasks.count) Задач")
                         .font(theme.fonts.subheadline)
                         .foregroundColor(theme.colors.text)
                 }
@@ -66,14 +76,23 @@ struct TaskListView: View {
                     }
                 }
             }
-        }
-    }
-    private func makeNewTaskRedactorView() -> some View {
-        let newTask = Task(title: "Новая задача")
-        return TaskRedactorView(taskVM: TaskRedactorViewModel(task: newTask, isNewTask: true),
-            onSave: {
+            .onAppear {
                 viewModel.loadTasks()
             }
+        }
+    }
+
+    private func makeNewTaskRedactorView() -> some View {
+        let newTask = Task(title: "", description: "", isDone: false, createdAt: Date())
+        return TaskRedactorView(
+            taskVM: TaskRedactorViewModel(
+                task: newTask,
+                isNewTask: true,
+                onSave: { [weak viewModel] in
+                    viewModel?.loadTasks()
+                    refreshID = UUID()
+                }
+            )
         )
     }
 }
