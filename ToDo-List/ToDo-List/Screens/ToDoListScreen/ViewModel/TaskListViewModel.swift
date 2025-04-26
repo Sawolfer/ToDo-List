@@ -12,13 +12,27 @@ class TaskListViewModel: ObservableObject {
     @Published var tasks: [TaskViewModel] = []
     @Published var searchText: String = ""
     private let persistenceController: PersistenceController
+    private let networkManager: AppNetworkManager
 
     init(persistenceController: PersistenceController = .shared) {
         self.persistenceController = persistenceController
-        loadTasks()
+        self.networkManager = AppNetworkManager(persistenceController: persistenceController)
+        loadInitialData()
     }
 
-    func loadTasks() {
+    private func loadInitialData() {
+        loadLocalTasks()
+
+        networkManager.loadInitialTasksIfNeeded { [weak self] success in
+            if success {
+                DispatchQueue.main.async {
+                    self?.loadLocalTasks() // Reload with new API tasks
+                }
+            }
+        }
+    }
+
+    func loadLocalTasks() {
         let context = persistenceController.container.viewContext
         let fetchRequest: NSFetchRequest<CDTask> = CDTask.fetchRequest()
 
@@ -56,6 +70,10 @@ class TaskListViewModel: ObservableObject {
 
     func deleteTasks(at offsets: IndexSet) {
         tasks.remove(atOffsets: offsets)
+    }
+
+    func deleteTask(_ task: TaskViewModel) {
+        tasks.removeAll() { $0 === task}
     }
 
     static func sampleData() -> TaskListViewModel {

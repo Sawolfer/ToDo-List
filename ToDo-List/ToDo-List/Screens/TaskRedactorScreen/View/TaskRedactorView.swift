@@ -20,7 +20,7 @@ struct TaskRedactorView: View {
     @ObservedObject var taskVM: TaskRedactorViewModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         let theme = AppTheme.theme(for: colorScheme)
 
@@ -60,13 +60,15 @@ struct TaskRedactorView: View {
                         }
                     }
                     .foregroundStyle(theme.colors.accent)
-                    .disabled(taskVM.task.title.isEmpty)
                 }
             }
         }
     }
+
     private func handleSaveAndDismiss() {
-        taskVM.saveTask()
+        if !taskVM.task.title.isEmpty {
+            taskVM.saveTask()
+        }
         dismiss()
     }
 }

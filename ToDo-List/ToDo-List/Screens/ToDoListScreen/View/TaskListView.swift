@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct TaskListView: View {
     // MARK: - Constants
     private enum Constants {
@@ -17,86 +16,108 @@ struct TaskListView: View {
     // MARK: - Properties
     @ObservedObject var viewModel: TaskListViewModel
     @Environment(\.colorScheme) var colorScheme
-    @State var refreshID: UUID = UUID()
+    @State private var refreshID: UUID = UUID()
 
+    // MARK: - Computed Properties
+    private var theme: AppTheme {
+        AppTheme.theme(for: colorScheme)
+    }
+
+    private var taskCountText: some View {
+        Text("\(viewModel.tasks.count) Задач")
+            .font(theme.fonts.subheadline)
+            .foregroundColor(theme.colors.text)
+    }
+
+    private var addButton: some View {
+        Image(systemName: Constants.addNewToDoButtonImage)
+            .font(.system(size: 20, weight: .bold))
+            .foregroundStyle(theme.colors.accent)
+    }
+
+    // MARK: - Main View
     var body: some View {
-        let theme = AppTheme.theme(for: colorScheme)
         NavigationStack {
-            ScrollView {
-                LazyVStack {
-                    ForEach(viewModel.filteredTasks) { vm in
-                        NavigationLink {
-                            TaskRedactorView(
-                                taskVM: TaskRedactorViewModel(
-                                    task: vm.task,
-                                    onSave: { [weak viewModel] in
-                                        viewModel?.loadTasks()
-                                        refreshID = UUID()
-                                    }
-                                )
-                            )
-                        } label: {
-                            TaskView(viewModel: vm)
-                        }
-                        .buttonStyle(.plain)
-
-                        Divider()
-                            .background(theme.colors.secondary)
-                            .padding(.horizontal)
-                    }
+            taskListContent
+                .searchable(text: $viewModel.searchText)
+                .navigationTitle("Задачи")
+                .toolbarBackground(theme.colors.secondary.opacity(0.3), for: .bottomBar)
+                .toolbarBackground(.visible, for: .bottomBar)
+                .toolbar { bottomToolbar }
+                .onAppear {
+                    viewModel.loadLocalTasks()
                 }
-                .id(refreshID)
-            }
-            .searchable(text: $viewModel.searchText)
-            .navigationTitle("Задачи")
-            .toolbarBackground(theme.colors.secondary.opacity(0.3), for: .bottomBar)
-            .toolbarBackground(.visible, for: .bottomBar)
-            .toolbar {
-                ToolbarItem(placement: .bottomBar) {
-                    Spacer()
-                }
+        }
+    }
 
-                ToolbarItem(placement: .bottomBar) {
-                    Text("\(viewModel.tasks.count) Задач")
-                        .font(theme.fonts.subheadline)
-                        .foregroundColor(theme.colors.text)
-                }
-
-                ToolbarItem(placement: .bottomBar) {
-                    Spacer()
-                }
-
-                ToolbarItem(placement: .bottomBar) {
-                    NavigationLink {
-                        makeNewTaskRedactorView()
-                    } label: {
-                        Image(systemName: Constants.addNewToDoButtonImage)
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundStyle(theme.colors.accent)
-                    }
+    // MARK: - Subviews
+    private var taskListContent: some View {
+        ScrollView {
+            LazyVStack {
+                ForEach(viewModel.filteredTasks) { taskViewModel in
+                    taskRow(for: taskViewModel)
+                    divider
                 }
             }
-            .onAppear {
-                viewModel.loadTasks()
+            .id(refreshID)
+        }
+    }
+
+    private func taskRow(for viewModel: TaskViewModel) -> some View {
+        NavigationLink {
+            TaskRedactorView(
+                taskVM: taskRedactorViewModel(for: viewModel.task)
+            )
+        } label: {
+            TaskView(viewModel: viewModel)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var divider: some View {
+        Divider()
+            .background(theme.colors.secondary)
+            .padding(.horizontal)
+    }
+
+    private var bottomToolbar: some ToolbarContent {
+        ToolbarItemGroup(placement: .bottomBar) {
+            Spacer()
+            taskCountText
+            Spacer()
+            NavigationLink {
+                newTaskRedactorView
+            } label: {
+                addButton
             }
         }
     }
 
-    private func makeNewTaskRedactorView() -> some View {
+    // MARK: - View Models
+    private func taskRedactorViewModel(for task: Task) -> TaskRedactorViewModel {
+        TaskRedactorViewModel(
+            task: task,
+            onSave: { [weak viewModel] in
+                viewModel?.loadLocalTasks()
+                refreshID = UUID()
+            }
+        )
+    }
+
+    private var newTaskRedactorView: some View {
         let newTask = Task(title: "", description: "", isDone: false, createdAt: Date())
         return TaskRedactorView(
             taskVM: TaskRedactorViewModel(
                 task: newTask,
                 isNewTask: true,
                 onSave: { [weak viewModel] in
-                    viewModel?.loadTasks()
+                    viewModel?.loadLocalTasks()
                     refreshID = UUID()
                 }
             )
         )
     }
 }
-
 #Preview {
     let vm = TaskListViewModel.sampleData()
 
