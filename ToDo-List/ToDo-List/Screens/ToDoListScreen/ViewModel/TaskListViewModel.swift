@@ -32,6 +32,8 @@ class TaskListViewModel: ObservableObject {
         }
     }
 
+    @Published var errorMessage: String?
+    
     func loadLocalTasks() {
         let context = persistenceController.container.viewContext
         let fetchRequest: NSFetchRequest<CDTask> = CDTask.fetchRequest()
@@ -42,6 +44,7 @@ class TaskListViewModel: ObservableObject {
                 .map { TaskViewModel(task: Task(cdTask: $0)) }
                 .sorted { $0.task.createdAt > $1.task.createdAt }
         } catch {
+            errorMessage = "Failed to fetch tasks: \(error.localizedDescription)"
             print("Failed to fetch tasks: \(error)")
         }
     }

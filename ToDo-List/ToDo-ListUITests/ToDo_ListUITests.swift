@@ -32,7 +32,7 @@ final class ToDo_ListUITests: XCTestCase {
     }
 
     @MainActor
-    func testLaunchPerformance() throws {
+        func testLaunchPerformance() throws {
         // This measures how long it takes to launch your application.
         measure(metrics: [XCTApplicationLaunchMetric()]) {
             XCUIApplication().launch()

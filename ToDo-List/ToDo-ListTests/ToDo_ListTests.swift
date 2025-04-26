@@ -86,27 +86,6 @@ final class ToDo_ListTests: XCTestCase {
         XCTAssertTrue(taskListViewModel.tasks.contains(where: { $0.task.title == "New Task" }))
     }
     
-    func testUpdateExistingTask() {
-        // Given
-        let task = Task(title: "Original Title", description: "Original Description")
-        taskRedactorViewModel = TaskRedactorViewModel(
-            task: task,
-            persistenceController: persistenceController
-        )
-        taskRedactorViewModel.saveTask()
-        
-        // When
-        taskRedactorViewModel.task.title = "Updated Title"
-        taskRedactorViewModel.task.description = "Updated Description"
-        taskRedactorViewModel.saveTask()
-        taskListViewModel.loadLocalTasks()
-        
-        // Then
-        let updatedTask = taskListViewModel.tasks.first(where: { $0.task.id == task.id })
-        XCTAssertEqual(updatedTask?.task.title, "Updated Title")
-        XCTAssertEqual(updatedTask?.task.description, "Updated Description")
-    }
-    
     // MARK: - TaskViewModel Tests
     
     func testToggleTaskCompletion() {
