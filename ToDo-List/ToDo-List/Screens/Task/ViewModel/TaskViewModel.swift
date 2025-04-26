@@ -1,0 +1,30 @@
+//
+//  TaskViewModel.swift
+//  ToDo-List
+//
+//  Created by Савва Пономарев on 20.04.2025.
+//
+
+import Foundation
+
+class TaskViewModel: ObservableObject {
+    @Published var task: Task
+    var onDeleteHandler: (() -> Void)?
+
+    init(task: Task) {
+        self.task = task
+    }
+
+    func onDone() {
+        task.isDone.toggle()
+
+        TaskPersistenceController.shared.updateTask(task)
+    }
+
+    func onDelete() {
+        TaskPersistenceController.shared.deleteTask(withId: task.id)
+        onDeleteHandler?()
+    }
+}
+
+extension TaskViewModel: Identifiable {}
