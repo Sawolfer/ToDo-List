@@ -53,7 +53,15 @@ struct Task {
     }
 }
 
-extension Task : Identifiable {}
+extension Task : Identifiable, Hashable {
+    static func == (lhs: Task, rhs: Task) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
 
 extension Date {
 // MARK: - Date view formatter

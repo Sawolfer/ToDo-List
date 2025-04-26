@@ -73,7 +73,17 @@ struct TaskRedactorView: View {
     }
 }
 
+extension TaskRedactorView : Hashable {
+    static func == (lhs: TaskRedactorView, rhs: TaskRedactorView) -> Bool {
+        lhs.taskVM == rhs.taskVM
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(taskVM)
+    }
+}
 
 #Preview {
     TaskRedactorView(taskVM: TaskRedactorViewModel(task: Task(title: "Preview Task", description: "some text")))
 }
+

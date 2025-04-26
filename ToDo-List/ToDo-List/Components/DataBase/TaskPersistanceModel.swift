@@ -48,4 +48,8 @@ final class TaskPersistenceController {
             }
         }
     }
+
+    func deleteTask(withId id: UUID) {
+        return
+    }
 }

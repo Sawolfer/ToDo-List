@@ -17,6 +17,10 @@ struct TaskListView: View {
     @ObservedObject var viewModel: TaskListViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var refreshID: UUID = UUID()
+    @State private var selectedTask: TaskViewModel? = nil
+
+    @State private var navigationPath = NavigationPath()
+    @State private var showShareSheet = false
 
     // MARK: - Computed Properties
     private var theme: AppTheme {
@@ -31,23 +35,50 @@ struct TaskListView: View {
 
     private var addButton: some View {
         Image(systemName: Constants.addNewToDoButtonImage)
-            .font(.system(size: 20, weight: .bold))
+            .font(.system(size: 20))
             .foregroundStyle(theme.colors.accent)
     }
 
     // MARK: - Main View
     var body: some View {
-        NavigationStack {
-            taskListContent
-                .searchable(text: $viewModel.searchText)
-                .navigationTitle("Задачи")
-                .toolbarBackground(theme.colors.secondary.opacity(0.3), for: .bottomBar)
-                .toolbarBackground(.visible, for: .bottomBar)
-                .toolbar { bottomToolbar }
-                .onAppear {
-                    viewModel.loadLocalTasks()
+        ZStack {
+            NavigationStack(path: $navigationPath) {
+                taskListContent
+                    .searchable(text: $viewModel.searchText)
+                    .navigationTitle("Задачи")
+                    .toolbarBackground(theme.colors.secondary.opacity(0.3), for: .bottomBar)
+                    .toolbarBackground(.visible, for: .bottomBar)
+                    .toolbar { bottomToolbar }
+                    .onAppear {
+                        viewModel.loadLocalTasks()
+                    }
+                    .sheet(isPresented: $showShareSheet) {
+                        ShareSheet(items: ["\(selectedTask?.task.title ?? "")\n \(selectedTask?.task.description ?? "")"])
+                    }
+            }
+            .blur(radius: selectedTask == nil ? 0 : 4)
+            
+            if let selectedTask {
+                Color.black.opacity(0.001)
+                    .ignoresSafeArea()
+                    .onTapGesture { closeDialog() }
+
+                VStack(spacing: 16) {
+                    TaskView(viewModel: selectedTask)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .background(theme.colors.background)
+                        .cornerRadius(16)
+                        .padding(.horizontal, 32)
+                        .scaleEffect(1.05)
+                        .shadow(radius: 10)
+
+                    actionMenu(for: selectedTask)
                 }
+                .transition(.scale.combined(with: .opacity))
+                .zIndex(1)
+            }
         }
+        
     }
 
     // MARK: - Subviews
@@ -70,8 +101,75 @@ struct TaskListView: View {
             )
         } label: {
             TaskView(viewModel: viewModel)
+                .contentShape(Rectangle())
+                .simultaneousGesture(
+                    LongPressGesture()
+                        .onEnded { _ in
+                            withAnimation(.spring()) {
+                                print(viewModel.task.title)
+                                selectedTask = viewModel
+                            }
+                        }
+                )
         }
         .buttonStyle(.plain)
+    }
+
+    func closeDialog() {
+        selectedTask = nil
+    }
+
+    func editTask(_ task: TaskViewModel) {
+        closeDialog()
+        navigationPath.append(task.task)
+    }
+
+    func shareTask(_ task: TaskViewModel) {
+        showShareSheet = true
+    }
+
+    func deleteTask(_ task: TaskViewModel) {
+        closeDialog()
+//        task.onDelete()
+    }
+
+
+    // MARK: - View Components
+    @ViewBuilder
+    private func actionMenu(for task: TaskViewModel) -> some View {
+        VStack(spacing: 0) {
+            Button(action: { editTask(task) }) {
+                menuButton(title: "Редактировать", icon: "square.and.pencil")
+            }
+
+            Divider()
+
+            Button(action: { shareTask(task) }) {
+                menuButton(title: "Поделиться", icon: "square.and.arrow.up")
+            }
+
+            Divider()
+
+            Button(action: { deleteTask(task) }) {
+                menuButton(title: "Удалить", icon: "trash", color: .red)
+            }
+        }
+        .background(.ultraThinMaterial)
+        .foregroundStyle(theme.colors.secondary)
+        .cornerRadius(12)
+        .padding(.horizontal, 40)
+    }
+
+    @ViewBuilder
+    private func menuButton(title: String, icon: String, color: Color = .primary) -> some View {
+        HStack {
+            Text(title)
+                .foregroundColor(color)
+            Spacer()
+            Image(systemName: icon)
+                .foregroundColor(color)
+        }
+        .padding()
     }
 
     private var divider: some View {
