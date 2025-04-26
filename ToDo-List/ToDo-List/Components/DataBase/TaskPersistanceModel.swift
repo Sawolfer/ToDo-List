@@ -50,6 +50,21 @@ final class TaskPersistenceController {
     }
 
     func deleteTask(withId id: UUID) {
-        return
+        let context = persistenceController.container.newBackgroundContext()
+
+        DispatchQueue.global(qos: .background).async {
+            let fetchRequest: NSFetchRequest<CDTask> = CDTask.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+            do {
+                let results = try context.fetch(fetchRequest)
+                if let cdTask = results.first {
+                    context.delete(cdTask)
+                    try context.save()
+                }
+            } catch {
+                print("Failed to delete task: \(error)")
+            }
+        }
     }
 }

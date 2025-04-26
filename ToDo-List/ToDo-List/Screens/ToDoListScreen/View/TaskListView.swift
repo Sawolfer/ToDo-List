@@ -130,7 +130,8 @@ struct TaskListView: View {
 
     func deleteTask(_ task: TaskViewModel) {
         closeDialog()
-//        task.onDelete()
+        viewModel.deleteTask(task)
+        task.onDelete()
     }
 
 
