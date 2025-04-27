@@ -30,12 +30,12 @@ A modern, elegant task management application built with SwiftUI, featuring a cl
 
 <p align="center">
 <div style="display: flex; justify-content: center; gap: 10px;">
-    <img src="screenshots/light_task_searching.png" width="50%" alt="Light Mode Task Search"/>
-    <img src="screenshots/light_task_selecting.png" width="50%" alt="Light Mode Task Select"/>
+    <img src="screenshots/light_task_searching.png" width="47%" alt="Light Mode Task Search"/>
+    <img src="screenshots/light_task_selecting.png" width="47%" alt="Light Mode Task Select"/>
 </div>
 </p>
 <div style="display: flex; justify-content: center; gap: 10px;">
-    <img src="screenshots/light_editor_screen.png" width="50%" alt="Light Mode Task Editor"/>
+    <img src="screenshots/light_editor_screen.png" width="47%" alt="Light Mode Task Editor"/>
 </div>
 </p>
 
@@ -49,13 +49,13 @@ A modern, elegant task management application built with SwiftUI, featuring a cl
 
 <p align="center">
 <div style="display: flex; justify-content: center; gap: 10px;">
-    <img src="screenshots/dark_task_searching.png" width="50%" alt="Dark Mode Task Search"/>
-    <img src="screenshots/dark_task_selecting.png" width="50%" alt="Dark Mode Task Select"/>
+    <img src="screenshots/dark_task_searching.png" width="47%" alt="Dark Mode Task Search"/>
+    <img src="screenshots/dark_task_selecting.png" width="47%" alt="Dark Mode Task Select"/>
 </div>
 </p>
 
 <div style="display: flex; justify-content: center; gap: 10px;">
-    <img src="screenshots/dark_editor_screen.png" width="50%" alt="Dark Mode Task Editor"/>
+    <img src="screenshots/dark_editor_screen.png" width="47%" alt="Dark Mode Task Editor"/>
 </div>
 </p>
 <p align="center"><em>Main task list features in dark mode</em></p>
