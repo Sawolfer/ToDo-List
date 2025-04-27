@@ -33,7 +33,7 @@ A modern, elegant task management application built with SwiftUI, featuring a cl
     <img src="screenshots/light_task_searching.png" width="47%" alt="Light Mode Task Search"/>
     <img src="screenshots/light_task_selecting.png" width="47%" alt="Light Mode Task Select"/>
 </div>
-</p>
+</p align="center">
 <div style="display: flex; justify-content: center; gap: 10px;">
     <img src="screenshots/light_editor_screen.png" width="47%" alt="Light Mode Task Editor"/>
 </div>
@@ -52,8 +52,7 @@ A modern, elegant task management application built with SwiftUI, featuring a cl
     <img src="screenshots/dark_task_searching.png" width="47%" alt="Dark Mode Task Search"/>
     <img src="screenshots/dark_task_selecting.png" width="47%" alt="Dark Mode Task Select"/>
 </div>
-</p>
-
+</p align="center">
 <div style="display: flex; justify-content: center; gap: 10px;">
     <img src="screenshots/dark_editor_screen.png" width="47%" alt="Dark Mode Task Editor"/>
 </div>
@@ -99,27 +98,6 @@ The project is structured using the MVVM pattern:
 - Components : Reusable UI components
 - Theme : Custom theming system
 - Database : CoreData persistence setup
-
-## Folder Structure
-Open Folder
-ToDo-List/
-├── Screens/
-│   ├── ToDoListScreen/
-│   │   ├── View/
-│   │   ├── ViewModel/
-│   │   └── Model/
-│   ├── Task/
-│   │   ├── View/
-│   │   ├── ViewModel/
-│   │   └── Model/
-│   └── TaskRedactorScreen/
-│       ├── View/
-│       └── ViewModel/
-└── Components/
-├── Theme/
-└── Database/
-
-Fold
 
 ## Testing
 - Unit tests for ViewModels
