@@ -19,7 +19,7 @@ struct TaskRedactorView: View {
     // MARK: - Properties
     @ObservedObject var taskVM: TaskRedactorViewModel
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) var colorScheme 
 
     var body: some View {
         let theme = AppTheme.theme(for: colorScheme)
