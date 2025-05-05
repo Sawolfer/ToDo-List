@@ -58,7 +58,6 @@ struct TaskListView: View {
                             "\(selectedTask?.task.title ?? "")\n \(selectedTask?.task.description ?? "")"
                         ])
                     }
-                    <<<<<<< HEAD
                     .fullScreenCover(isPresented: $showEditorTask) {
                         if let task = selectedTask {
                             TaskRedactorView(
