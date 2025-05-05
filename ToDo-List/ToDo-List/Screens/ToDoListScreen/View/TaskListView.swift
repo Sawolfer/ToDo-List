@@ -206,7 +206,7 @@ struct TaskListView: View {
     }
 
     // MARK: - View Models
-    private func taskRedactorViewModel(for task: Task) -> TaskRedactorViewModel {
+    private func taskRedactorViewModel(for task: ToDoTask) -> TaskRedactorViewModel {
         TaskRedactorViewModel(
             task: task,
             onSave: { [weak viewModel] in
@@ -217,7 +217,7 @@ struct TaskListView: View {
     }
 
     private var newTaskRedactorView: some View {
-        let newTask = Task(title: "", description: "", isDone: false, createdAt: Date())
+        let newTask = ToDoTask(title: "", description: "", isDone: false, createdAt: Date())
         return TaskRedactorView(
             taskVM: TaskRedactorViewModel(
                 task: newTask,

@@ -84,6 +84,6 @@ extension TaskRedactorView : Hashable {
 }
 
 #Preview {
-    TaskRedactorView(taskVM: TaskRedactorViewModel(task: Task(title: "Preview Task", description: "some text")))
+    TaskRedactorView(taskVM: TaskRedactorViewModel(task: ToDoTask(title: "Preview Task", description: "some text")))
 }
 

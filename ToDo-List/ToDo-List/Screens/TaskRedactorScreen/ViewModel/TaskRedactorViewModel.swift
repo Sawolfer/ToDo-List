@@ -10,12 +10,12 @@ import Foundation
 import CoreData
 
 class TaskRedactorViewModel: ObservableObject {
-    @Published var task: Task
+    @Published var task: ToDoTask
     private let persistenceController: PersistenceController
     var isNewTask: Bool
     var onSave: (() -> Void)?
 
-    init(task: Task, isNewTask: Bool = false, persistenceController: PersistenceController = .shared, onSave: (() -> Void)? = nil) {
+    init(task: ToDoTask, isNewTask: Bool = false, persistenceController: PersistenceController = .shared, onSave: (() -> Void)? = nil) {
         self.task = task
         self.isNewTask = isNewTask
         self.persistenceController = persistenceController

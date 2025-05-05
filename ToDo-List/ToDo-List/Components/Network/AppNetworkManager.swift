@@ -63,7 +63,7 @@ class AppNetworkManager {
         let context = persistenceController.container.viewContext
 
         apiTasks.forEach { apiTask in
-            let task = Task(
+            let task = ToDoTask(
                 title: apiTask.todo,
                 description: "Imported from API",
                 isDone: apiTask.completed,

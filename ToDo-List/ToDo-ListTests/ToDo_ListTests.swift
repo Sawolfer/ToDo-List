@@ -71,7 +71,7 @@ final class ToDo_ListTests: XCTestCase {
     
     func testSaveNewTask() {
         // Given
-        let task = Task(title: "New Task", description: "Test Description")
+        let task = ToDoTask(title: "New Task", description: "Test Description")
         taskRedactorViewModel = TaskRedactorViewModel(
             task: task,
             isNewTask: true,
@@ -90,7 +90,7 @@ final class ToDo_ListTests: XCTestCase {
     
     func testToggleTaskCompletion() {
         // Given
-        let task = Task(title: "Test Task", description: "Test Description")
+        let task = ToDoTask(title: "Test Task", description: "Test Description")
         let taskViewModel = TaskViewModel(task: task)
         let initialState = taskViewModel.task.isDone
         

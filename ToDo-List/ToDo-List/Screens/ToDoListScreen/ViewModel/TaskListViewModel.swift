@@ -41,7 +41,7 @@ class TaskListViewModel: ObservableObject {
         do {
             let cdTasks = try context.fetch(fetchRequest)
             self.tasks = cdTasks
-                .map { TaskViewModel(task: Task(cdTask: $0)) }
+                .map { TaskViewModel(task: ToDoTask(cdTask: $0)) }
                 .sorted { $0.task.createdAt > $1.task.createdAt }
         } catch {
             errorMessage = "Failed to fetch tasks: \(error.localizedDescription)"
@@ -60,14 +60,14 @@ class TaskListViewModel: ObservableObject {
     }
 
     func createNewTask() -> TaskViewModel {
-        let newTask = Task(title: "", description: "")
+        let newTask = ToDoTask(title: "", description: "")
         let newViewModel = TaskViewModel(task: newTask)
         tasks.append(newViewModel)
         return newViewModel
     }
 
     func addTask(title: String, description: String = "") {
-        let newTask = Task(title: title, description: description)
+        let newTask = ToDoTask(title: title, description: description)
         tasks.append(TaskViewModel(task: newTask))
     }
 
@@ -82,9 +82,9 @@ class TaskListViewModel: ObservableObject {
     static func sampleData() -> TaskListViewModel {
         let vm = TaskListViewModel()
         vm.tasks = [
-            TaskViewModel(task: Task(title: "Buy groceries", description: "Milk, eggs, bread", isDone: true)),
-            TaskViewModel(task: Task(title: "Finish project", description: "Due by Friday")),
-            TaskViewModel(task: Task(title: "Call mom", description: "Ask about vacation plans"))
+            TaskViewModel(task: ToDoTask(title: "Buy groceries", description: "Milk, eggs, bread", isDone: true)),
+            TaskViewModel(task: ToDoTask(title: "Finish project", description: "Due by Friday")),
+            TaskViewModel(task: ToDoTask(title: "Call mom", description: "Ask about vacation plans"))
         ]
         return vm
     }

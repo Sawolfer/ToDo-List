@@ -8,14 +8,14 @@
 import Foundation
 import CoreData
 
-struct Task {
+struct ToDoTask {
     var id: UUID = UUID()
     var title: String = ""
     var description: String = ""
     var isDone: Bool = false
     var createdAt: Date = Date()
 
-    func saveTask(_ task: Task, context: NSManagedObjectContext) {
+    func saveTask(_ task: ToDoTask, context: NSManagedObjectContext) {
         let cdTask = CDTask(context: context)
         cdTask.update(from: task)
 
@@ -26,18 +26,18 @@ struct Task {
         }
     }
 
-    func fetchTasks(context: NSManagedObjectContext) -> [Task] {
+    func fetchTasks(context: NSManagedObjectContext) -> [ToDoTask] {
         let request: NSFetchRequest<CDTask> = CDTask.fetchRequest()
         do {
             let cdTasks = try context.fetch(request)
-            return cdTasks.map(Task.init)
+            return cdTasks.map(ToDoTask.init)
         } catch {
             print("Failed to fetch tasks: \(error)")
             return []
         }
     }
     
-    func deleteTask(_ task: Task, context: NSManagedObjectContext) {
+    func deleteTask(_ task: ToDoTask, context: NSManagedObjectContext) {
         let request: NSFetchRequest<CDTask> = CDTask.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", task.id as CVarArg)
 
@@ -53,8 +53,8 @@ struct Task {
     }
 }
 
-extension Task : Identifiable, Hashable {
-    static func == (lhs: Task, rhs: Task) -> Bool {
+extension ToDoTask : Identifiable, Hashable {
+    static func == (lhs: ToDoTask, rhs: ToDoTask) -> Bool {
         lhs.id == rhs.id
     }
 
@@ -74,7 +74,7 @@ extension Date {
 }
 // MARK: - Core Data
 extension CDTask {
-    func update(from task: Task) {
+    func update(from task: ToDoTask) {
         self.id = task.id
         self.title = task.title
         self.descriptionText = task.description
@@ -83,7 +83,7 @@ extension CDTask {
     }
 }
 
-extension Task {
+extension ToDoTask {
     init(cdTask: CDTask) {
         self.id = cdTask.id ?? UUID()
         self.title = cdTask.title ?? ""
