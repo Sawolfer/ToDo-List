@@ -29,10 +29,12 @@ struct TaskView: View {
             VStack(alignment: .leading) {
                 Text(viewModel.task.title)
                     .strikethrough(viewModel.task.isDone, color: theme.colors.secondary)
+                    .lineLimit(1)
                     .foregroundColor(viewModel.task.isDone ? theme.colors.secondary : theme.colors.text)
                     .font(theme.fonts.headline)
                 Text(viewModel.task.description)
                     .font(theme.fonts.subheadline)
+                    .lineLimit(2)
                     .foregroundColor(viewModel.task.isDone ? theme.colors.secondary : theme.colors.text)
                 Text(viewModel.task.createdAt.slashedDate)
                     .font(theme.fonts.caption)
