@@ -33,14 +33,12 @@ final class TaskListViewModel: ObservableObject {
     }
 
     @Published var errorMessage: String?
-
     private func mapCDTasksToViewModels(_ cdTasks: [CDTask]) -> [TaskViewModel] {
         return
             cdTasks
             .map { TaskViewModel(task: ToDoTask(cdTask: $0)) }
             .sorted { $0.task.createdAt > $1.task.createdAt }
     }
-
     func loadLocalTasks() {
         let context = persistenceController.container.viewContext
         let fetchRequest: NSFetchRequest<CDTask> = CDTask.fetchRequest()

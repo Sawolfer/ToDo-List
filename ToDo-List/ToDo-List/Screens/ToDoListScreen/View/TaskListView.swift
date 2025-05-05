@@ -93,7 +93,6 @@ struct TaskListView: View {
                 .zIndex(1)
             }
         }
-
     }
 
     // MARK: - Subviews

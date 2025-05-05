@@ -12,7 +12,6 @@ final class TaskViewModel: ObservableObject {
     var onDeleteHandler: (() -> Void)?
 
     init(task: ToDoTask) {
-
         self.task = task
     }
 

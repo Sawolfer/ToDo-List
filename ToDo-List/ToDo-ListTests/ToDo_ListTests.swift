@@ -23,7 +23,6 @@ final class ToDo_ListTests: XCTestCase {
     }
 
     // MARK: - TaskListViewModel Tests
-
     func testAddNewTask() {
         // Given
         let initialTaskCount = taskListViewModel.tasks.count
