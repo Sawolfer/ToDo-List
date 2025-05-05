@@ -55,7 +55,8 @@ struct TaskRedactorView: View {
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: Constants.backwardButtonImage)
-                                .font(.system(size: Constants.bacwardButtonImageSize, weight: .bold))
+                                .font(
+                                    .system(size: Constants.bacwardButtonImageSize, weight: .bold))
                             Text(Constants.bacwardButtonLable)
                         }
                     }
@@ -73,7 +74,7 @@ struct TaskRedactorView: View {
     }
 }
 
-extension TaskRedactorView : Hashable {
+extension TaskRedactorView: Hashable {
     static func == (lhs: TaskRedactorView, rhs: TaskRedactorView) -> Bool {
         lhs.taskVM == rhs.taskVM
     }
@@ -84,6 +85,7 @@ extension TaskRedactorView : Hashable {
 }
 
 #Preview {
-    TaskRedactorView(taskVM: TaskRedactorViewModel(task: Task(title: "Preview Task", description: "some text")))
+    TaskRedactorView(
+        taskVM: TaskRedactorViewModel(
+            task: ToDoTask(title: "Preview Task", description: "some text")))
 }
-

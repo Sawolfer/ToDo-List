@@ -5,8 +5,8 @@
 //  Created by Савва Пономарев on 26.04.2025.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 final class TaskPersistenceController {
     static let shared = TaskPersistenceController()
@@ -15,7 +15,7 @@ final class TaskPersistenceController {
 
     private init() {}
 
-    func updateTask(_ task: Task) {
+    func updateTask(_ task: ToDoTask) {
         let context = persistenceController.container.newBackgroundContext()
 
         DispatchQueue.global(qos: .background).async {
@@ -34,7 +34,7 @@ final class TaskPersistenceController {
         }
     }
 
-    func saveNewTask(_ task: Task) {
+    func saveNewTask(_ task: ToDoTask) {
         let context = persistenceController.container.newBackgroundContext()
 
         DispatchQueue.global(qos: .background).async {
