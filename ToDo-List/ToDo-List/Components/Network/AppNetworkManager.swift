@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AppNetworkManager {
+final class AppNetworkManager {
     private let persistenceController: PersistenceController
     private let apiURL = URL(string: "https://dummyjson.com/todos")!
 

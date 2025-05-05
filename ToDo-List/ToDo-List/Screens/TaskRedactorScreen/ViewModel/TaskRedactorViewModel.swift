@@ -9,7 +9,7 @@ import SwiftUI
 import Foundation
 import CoreData
 
-class TaskRedactorViewModel: ObservableObject {
+final class TaskRedactorViewModel: ObservableObject {
     @Published var task: ToDoTask
     private let persistenceController: PersistenceController
     var isNewTask: Bool

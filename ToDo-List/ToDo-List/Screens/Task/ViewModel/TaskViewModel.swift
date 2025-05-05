@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TaskViewModel: ObservableObject {
+final class TaskViewModel: ObservableObject {
     @Published var task: ToDoTask
     var onDeleteHandler: (() -> Void)?
 

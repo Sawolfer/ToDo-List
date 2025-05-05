@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AppSettings {
+final class AppSettings {
     private enum Keys {
         static let hasLoadedInitialTasks = "hasLoadedInitialTasks"
     }

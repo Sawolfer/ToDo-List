@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-class TaskListViewModel: ObservableObject {
+final class TaskListViewModel: ObservableObject {
     @Published var tasks: [TaskViewModel] = []
     @Published var searchText: String = ""
     private let persistenceController: PersistenceController
@@ -34,21 +34,29 @@ class TaskListViewModel: ObservableObject {
 
     @Published var errorMessage: String?
     
+    private func mapCDTasksToViewModels(_ cdTasks: [CDTask]) -> [TaskViewModel] {
+        return cdTasks
+            .map { TaskViewModel(task: ToDoTask(cdTask: $0)) }
+            .sorted { $0.task.createdAt > $1.task.createdAt }
+    }
+
     func loadLocalTasks() {
         let context = persistenceController.container.viewContext
         let fetchRequest: NSFetchRequest<CDTask> = CDTask.fetchRequest()
-
+        
         do {
             let cdTasks = try context.fetch(fetchRequest)
-            self.tasks = cdTasks
-                .map { TaskViewModel(task: ToDoTask(cdTask: $0)) }
-                .sorted { $0.task.createdAt > $1.task.createdAt }
+            self.tasks = mapCDTasksToViewModels(cdTasks)
         } catch {
-            errorMessage = "Failed to fetch tasks: \(error.localizedDescription)"
-            print("Failed to fetch tasks: \(error)")
+            handleFetchError(error)
         }
     }
 
+    private func handleFetchError(_ error: Error) {
+        errorMessage = "Failed to fetch tasks: \(error.localizedDescription)"
+        print("Failed to fetch tasks: \(error)")
+    }
+    
     var filteredTasks: [TaskViewModel] {
         if searchText.isEmpty {
             return tasks
