@@ -5,8 +5,8 @@
 //  Created by Савва Пономарев on 26.04.2025.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 final class TaskPersistenceController {
     static let shared = TaskPersistenceController()

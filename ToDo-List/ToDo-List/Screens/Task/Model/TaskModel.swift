@@ -5,8 +5,8 @@
 //  Created by Савва Пономарев on 20.04.2025.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 struct ToDoTask {
     var id: UUID = UUID()
@@ -36,7 +36,7 @@ struct ToDoTask {
             return []
         }
     }
-    
+
     func deleteTask(_ task: ToDoTask, context: NSManagedObjectContext) {
         let request: NSFetchRequest<CDTask> = CDTask.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", task.id as CVarArg)
@@ -53,7 +53,7 @@ struct ToDoTask {
     }
 }
 
-extension ToDoTask : Identifiable, Hashable {
+extension ToDoTask: Identifiable, Hashable {
     static func == (lhs: ToDoTask, rhs: ToDoTask) -> Bool {
         lhs.id == rhs.id
     }
@@ -64,7 +64,7 @@ extension ToDoTask : Identifiable, Hashable {
 }
 
 extension Date {
-// MARK: - Date view formatter
+    // MARK: - Date view formatter
     var slashedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yy"

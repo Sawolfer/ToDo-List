@@ -5,8 +5,8 @@
 //  Created by Савва Пономарев on 26.04.2025.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 struct PersistenceController {
     static let shared = PersistenceController()
