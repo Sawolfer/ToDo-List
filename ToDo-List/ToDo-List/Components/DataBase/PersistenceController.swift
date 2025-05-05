@@ -5,8 +5,8 @@
 //  Created by Савва Пономарев on 26.04.2025.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -14,7 +14,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "Task")
+        container = NSPersistentContainer(name: "ToDoTask")
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
         }

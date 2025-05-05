@@ -21,6 +21,7 @@ struct TaskListView: View {
 
     @State private var navigationPath = NavigationPath()
     @State private var showShareSheet = false
+    @State private var showEditorTask = false
 
     // MARK: - Computed Properties
     private var theme: AppTheme {
@@ -53,11 +54,25 @@ struct TaskListView: View {
                         viewModel.loadLocalTasks()
                     }
                     .sheet(isPresented: $showShareSheet) {
-                        ShareSheet(items: ["\(selectedTask?.task.title ?? "")\n \(selectedTask?.task.description ?? "")"])
+                        ShareSheet(items: [
+                            "\(selectedTask?.task.title ?? "")\n \(selectedTask?.task.description ?? "")"
+                        ])
+                    }
+                    .fullScreenCover(isPresented: $showEditorTask) {
+                        if let task = selectedTask {
+                            TaskRedactorView(
+                                taskVM: TaskRedactorViewModel(task: task.task)
+                            )
+                            .onDisappear {
+                                showEditorTask = false
+                                viewModel.loadLocalTasks()
+                                closeDialog()
+                            }
+                        }
                     }
             }
             .blur(radius: selectedTask == nil ? 0 : 4)
-            
+
             if let selectedTask {
                 Color.black.opacity(0.001)
                     .ignoresSafeArea()
@@ -78,7 +93,7 @@ struct TaskListView: View {
                 .zIndex(1)
             }
         }
-        
+
     }
 
     // MARK: - Subviews
@@ -120,8 +135,8 @@ struct TaskListView: View {
     }
 
     func editTask(_ task: TaskViewModel) {
-        closeDialog()
-        navigationPath.append(task.task)
+        showEditorTask = true
+        selectedTask = task
     }
 
     func shareTask(_ task: TaskViewModel) {
@@ -133,7 +148,6 @@ struct TaskListView: View {
         viewModel.deleteTask(task)
         task.onDelete()
     }
-
 
     // MARK: - View Components
     @ViewBuilder
@@ -193,7 +207,7 @@ struct TaskListView: View {
     }
 
     // MARK: - View Models
-    private func taskRedactorViewModel(for task: Task) -> TaskRedactorViewModel {
+    private func taskRedactorViewModel(for task: ToDoTask) -> TaskRedactorViewModel {
         TaskRedactorViewModel(
             task: task,
             onSave: { [weak viewModel] in
@@ -204,7 +218,7 @@ struct TaskListView: View {
     }
 
     private var newTaskRedactorView: some View {
-        let newTask = Task(title: "", description: "", isDone: false, createdAt: Date())
+        let newTask = ToDoTask(title: "", description: "", isDone: false, createdAt: Date())
         return TaskRedactorView(
             taskVM: TaskRedactorViewModel(
                 task: newTask,
